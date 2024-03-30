@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_30_221011) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_30_224703) do
   create_table "groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -24,6 +24,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_30_221011) do
     t.date "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "state"
+    t.bigint "group_id", null: false
+    t.bigint "locationable_id", null: false
+    t.index ["group_id"], name: "index_leases_on_group_id"
+    t.index ["locationable_id"], name: "index_leases_on_locationable_id"
   end
 
   create_table "locationables", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -37,4 +42,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_30_221011) do
     t.integer "parent_id"
   end
 
+  add_foreign_key "leases", "groups"
+  add_foreign_key "leases", "locationables"
 end
