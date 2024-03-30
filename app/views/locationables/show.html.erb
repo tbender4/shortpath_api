@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @locationable %>
+
+<div>
+  <%= link_to "Edit this locationable", edit_locationable_path(@locationable) %> |
+  <%= link_to "Back to locationables", locationables_path %>
+
+  <%= button_to "Destroy this locationable", @locationable, method: :delete %>
+</div>

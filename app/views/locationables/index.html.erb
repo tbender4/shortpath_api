@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Locationables</h1>
+
+<div id="locationables">
+  <% @locationables.each do |locationable| %>
+    <%= render locationable %>
+    <p>
+      <%= link_to "Show this locationable", locationable %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New locationable", new_locationable_path %>

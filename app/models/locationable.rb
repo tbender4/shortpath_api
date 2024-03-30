@@ -1,0 +1,3 @@
+class Locationable < ApplicationRecord
+
+end

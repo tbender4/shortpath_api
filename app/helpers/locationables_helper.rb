@@ -1,0 +1,2 @@
+module LocationablesHelper
+end
