@@ -272,6 +272,7 @@ DEPENDENCIES
   redis (>= 4.0.1)
   selenium-webdriver
   sprockets-rails
+  state_machines
   state_machines-activerecord
   stimulus-rails
   turbo-rails
