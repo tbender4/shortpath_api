@@ -1,7 +1,13 @@
+# frozen_string_literal: true
+
+# yeah
 class Building < Locationable
   has_many :floors, foreign_key: :parent_id, dependent: :destroy
+  has_one :address, as: :addressable
 
-  # TODO: More optimal SQL queries for traversing through tree
+  before_save { build_address unless address }
+
+  # TODO: More optimal SQL queries for traversing through locationable tree
   def spaces
     floors.flat_map(&:spaces)
   end
