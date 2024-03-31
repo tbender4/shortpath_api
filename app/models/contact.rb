@@ -3,7 +3,8 @@ class Contact < ApplicationRecord
   # validates_uniqueness_of :uuid
 
   private
-    # def generate_uuid
-    #   uuid ||= SecureRandom.uuid
-    # end
+
+  # def generate_uuid
+  #   uuid ||= SecureRandom.uuid
+  # end
 end

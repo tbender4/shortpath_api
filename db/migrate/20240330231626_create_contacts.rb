@@ -7,7 +7,7 @@ class CreateContacts < ActiveRecord::Migration[7.1]
       t.string :company
       t.string :title
       t.string :email
-      t.string :uuid
+      t.string :uuid # For user, not for guests
 
       t.timestamps
     end
