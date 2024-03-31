@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :event_guests
+  resources :events
   resources :contacts
   resources :spaces
   resources :floors

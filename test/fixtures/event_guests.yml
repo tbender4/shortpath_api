@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event_id: one
+  contact_id: one
+  barcode: MyString
+
+two:
+  event_id: two
+  contact_id: two
+  barcode: MyString

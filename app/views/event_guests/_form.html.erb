@@ -1,0 +1,32 @@
+<%= form_with(model: event_guest) do |form| %>
+  <% if event_guest.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(event_guest.errors.count, "error") %> prohibited this event_guest from being saved:</h2>
+
+      <ul>
+        <% event_guest.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :event_id_id, style: "display: block" %>
+    <%= form.text_field :event_id_id %>
+  </div>
+
+  <div>
+    <%= form.label :contact_id_id, style: "display: block" %>
+    <%= form.text_field :contact_id_id %>
+  </div>
+
+  <div>
+    <%= form.label :barcode, style: "display: block" %>
+    <%= form.text_field :barcode %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

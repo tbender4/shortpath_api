@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  subject: MyString
+  description: MyString
+  group_id: one
+  locationable_id: one
+  special_instructions: MyString
+  rrule_data: MyString
+  string: MyString
+
+two:
+  subject: MyString
+  description: MyString
+  group_id: two
+  locationable_id: two
+  special_instructions: MyString
+  rrule_data: MyString
+  string: MyString
