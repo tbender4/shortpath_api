@@ -4,9 +4,9 @@ class Lease < ApplicationRecord
 
   validates_associated :group, :space, :start_date
 
-  state_machine :initial => :active do
+  state_machine initial: :active do
     event :retire do
-      transition :active => :expired
+      transition active: :expired
     end
   end
 end
