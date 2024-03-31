@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :group_contacts
   resources :event_guests
   resources :events
   resources :contacts

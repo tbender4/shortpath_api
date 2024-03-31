@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_31_170118) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_31_194046) do
   create_table "contacts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "first_name"
     t.string "middle_name"
@@ -48,6 +48,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_31_170118) do
     t.index ["locationable_id"], name: "index_events_on_locationable_id"
   end
 
+  create_table "group_contacts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.bigint "contact_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contact_id"], name: "index_group_contacts_on_contact_id"
+    t.index ["group_id"], name: "index_group_contacts_on_group_id"
+  end
+
   create_table "groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -83,6 +92,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_31_170118) do
   add_foreign_key "event_guests", "events"
   add_foreign_key "events", "groups"
   add_foreign_key "events", "locationables"
+  add_foreign_key "group_contacts", "contacts"
+  add_foreign_key "group_contacts", "groups"
   add_foreign_key "leases", "groups"
   add_foreign_key "leases", "locationables"
 end
