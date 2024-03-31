@@ -1,0 +1,22 @@
+<%= form_with(model: building_account) do |form| %>
+  <% if building_account.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(building_account.errors.count, "error") %> prohibited this building_account from being saved:</h2>
+
+      <ul>
+        <% building_account.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :building_id, style: "display: block" %>
+    <%= form.text_field :building_id %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

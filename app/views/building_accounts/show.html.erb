@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @building_account %>
+
+<div>
+  <%= link_to "Edit this building account", edit_building_account_path(@building_account) %> |
+  <%= link_to "Back to building accounts", building_accounts_path %>
+
+  <%= button_to "Destroy this building account", @building_account, method: :delete %>
+</div>

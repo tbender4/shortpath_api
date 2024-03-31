@@ -4,9 +4,13 @@
 class Building < Locationable
   has_many :floors, foreign_key: :parent_id, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
-  accepts_nested_attributes_for :address
+  has_one :building_account, dependent: :destroy
+  accepts_nested_attributes_for :address, :building_account
 
-  before_save { build_address unless address }
+  before_save do
+    build_address unless address
+    build_building_account unless building_account
+  end
 
   # TODO: More optimal SQL queries for traversing through locationable tree
   def spaces

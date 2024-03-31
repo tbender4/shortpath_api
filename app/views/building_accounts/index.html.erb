@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Building accounts</h1>
+
+<div id="building_accounts">
+  <% @building_accounts.each do |building_account| %>
+    <%= render building_account %>
+    <p>
+      <%= link_to "Show this building account", building_account %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New building account", new_building_account_path %>
