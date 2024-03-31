@@ -8,4 +8,9 @@ class Event < ApplicationRecord
 
   has_many :event_guests, -> { includes(:contact) }
   has_many :guests, -> { includes(:contact) }, through: :event_guests
+
+  # handle organizers when I get there
+  # Event Occurrence processor? Maybe. IDK
+
+  accepts_nested_attributes_for :guests
 end
