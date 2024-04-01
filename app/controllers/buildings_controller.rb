@@ -1,5 +1,5 @@
 class BuildingsController < ApplicationController
-  before_action :set_building, only: %i[ show edit update destroy ]
+  before_action :set_building, only: %i[show edit update destroy]
 
   # GET /buildings or /buildings.json
   def index
@@ -25,7 +25,7 @@ class BuildingsController < ApplicationController
 
     respond_to do |format|
       if @building.save
-        format.html { redirect_to building_url(@building), notice: "Building was successfully created." }
+        format.html { redirect_to building_url(@building), notice: 'Building was successfully created.' }
         format.json { render :show, status: :created, location: @building }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class BuildingsController < ApplicationController
   def update
     respond_to do |format|
       if @building.update(building_params)
-        format.html { redirect_to building_url(@building), notice: "Building was successfully updated." }
+        format.html { redirect_to building_url(@building), notice: 'Building was successfully updated.' }
         format.json { render :show, status: :ok, location: @building }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +52,20 @@ class BuildingsController < ApplicationController
     @building.destroy!
 
     respond_to do |format|
-      format.html { redirect_to buildings_url, notice: "Building was successfully destroyed." }
+      format.html { redirect_to buildings_url, notice: 'Building was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_building
-      @building = Building.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def building_params
-      params.fetch(:building, {})
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_building
+    @building = Building.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def building_params
+    params.require(:floor).permit(:name, :code)
+  end
 end

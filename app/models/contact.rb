@@ -13,8 +13,6 @@ class Contact < ApplicationRecord
   private
 
   def sync_user_email
-    # return unless user && !@syncing_email && email_changed? && user.email != email
-
     @syncing_email = true
     user.update(email:)
     @syncing_email = false
