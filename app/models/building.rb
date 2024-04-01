@@ -7,11 +7,7 @@ class Building < Locationable
   has_one :building_account, dependent: :destroy
   accepts_nested_attributes_for :address, :building_account
 
-  before_save do
-    build_address unless address
-    build_building_account unless building_account
-  end
-
+  after_save :create_child_objects
   # TODO: More optimal SQL queries for traversing through locationable tree
   def spaces
     floors.flat_map(&:spaces)
@@ -24,4 +20,12 @@ class Building < Locationable
   def active_leases
     spaces.flat_map(&:active_leases)
   end
+
+  private
+
+  def create_child_objects
+    address ||= Address.create(addressable: self)
+    building_account ||= BuildingAccount.create(building: self)
+  end
+
 end
