@@ -2,6 +2,7 @@
 
 # It's info is stored in contact table.
 class User < ApplicationRecord
+  rolify
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -14,6 +15,10 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :contact
 
   alias_attribute :login, :email # Legacy
+
+  def make_superuser
+    add_role :superuser
+  end
 
   private
 
