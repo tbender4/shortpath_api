@@ -9,15 +9,17 @@ class ApplicationPolicy
   end
 
   def index?
-    false
+    @user.has_role? :superuser
   end
 
   def show?
-    false
+    # false
+    @user.has_role? :superuser
   end
 
   def create?
-    false
+    # false
+    @user.has_role? :superuser
   end
 
   def new?
@@ -25,7 +27,8 @@ class ApplicationPolicy
   end
 
   def update?
-    false
+    # false
+    @user.has_role? :superuser
   end
 
   def edit?
@@ -33,7 +36,8 @@ class ApplicationPolicy
   end
 
   def destroy?
-    false
+    # false
+    @user.has_role? :superuser
   end
 
   class Scope
