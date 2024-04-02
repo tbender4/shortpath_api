@@ -24,11 +24,12 @@ class User < ApplicationRecord
 
   # Ensure contact record existence is not orphaned.
   def contact_must_exist
-    errors.add(:contact, "must exist") unless contact
+    errors.add(:contact, 'must exist') unless contact
   end
 
   def sync_contact_email
     return unless email_changed? && !@syncing_email && contact.email != email
+
     @syncing_email = true # Disable callback to sync the user email without recursion
     contact.update(email:)
     @syncing_email = false

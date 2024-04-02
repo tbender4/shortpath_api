@@ -24,8 +24,7 @@ class Building < Locationable
   private
 
   def create_child_objects
-    address ||= Address.create(addressable: self)
-    building_account ||= BuildingAccount.create(building: self)
+    self.address ||= Address.create(addressable: self)
+    self.building_account ||= BuildingAccount.create(building: self)
   end
-
 end
