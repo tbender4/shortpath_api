@@ -9,8 +9,8 @@
 #   end
 
 building = Building.create({name: 'Test Building'})
-building.floors << Floor.create({name: '1st floor' })
-building.floors << Floor.create({name: '2nd floor' })
+building.floors << Floor.create({name: '1st floor', flevel: 1 })
+building.floors << Floor.create({name: '2nd floor', flevel: 2 })
 building.floors.each.with_index(1) do |floor, index|
   space = Space.create({ name: "#{index}00" })
   floor.spaces << space

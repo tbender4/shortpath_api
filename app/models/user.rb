@@ -28,7 +28,7 @@ class User < ApplicationRecord
   end
 
   def sync_contact_email
-    return unless ( email_changed? || new_record? ) && !@syncing_email && contact.email != email
+    return unless email_changed? && !@syncing_email && contact.email != email
     @syncing_email = true # Disable callback to sync the user email without recursion
     contact.update(email:)
     @syncing_email = false

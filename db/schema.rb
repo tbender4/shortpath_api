@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_01_005454) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_01_235850) do
   create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "addressable_type", null: false
     t.bigint "addressable_id", null: false
@@ -109,6 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_005454) do
     t.datetime "updated_at", null: false
     t.string "type"
     t.integer "parent_id"
+    t.decimal "flevel", precision: 10
   end
 
   create_table "roles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
