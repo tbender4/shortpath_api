@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_01_235850) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_03_082645) do
   create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "addressable_type", null: false
     t.bigint "addressable_id", null: false
@@ -43,8 +43,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_235850) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
+    t.bigint "primary_group_id"
+    t.bigint "visitor_type_id"
+    t.index ["primary_group_id"], name: "index_contacts_on_primary_group_id"
     t.index ["user_id"], name: "index_contacts_on_user_id"
     t.index ["uuid"], name: "index_contacts_on_uuid"
+    t.index ["visitor_type_id"], name: "index_contacts_on_visitor_type_id"
   end
 
   create_table "event_guests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -143,8 +147,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_235850) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  create_table "visitor_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "building_id", null: false
+    t.string "name"
+    t.string "category"
+    t.boolean "hide_barcode"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["building_id"], name: "index_visitor_types_on_building_id"
+  end
+
   add_foreign_key "building_accounts", "locationables", column: "building_id"
+  add_foreign_key "contacts", "groups", column: "primary_group_id"
   add_foreign_key "contacts", "users"
+  add_foreign_key "contacts", "visitor_types"
   add_foreign_key "event_guests", "contacts"
   add_foreign_key "event_guests", "events"
   add_foreign_key "events", "groups"
@@ -153,4 +169,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_235850) do
   add_foreign_key "group_contacts", "groups"
   add_foreign_key "leases", "groups"
   add_foreign_key "leases", "locationables"
+  add_foreign_key "visitor_types", "locationables", column: "building_id"
 end

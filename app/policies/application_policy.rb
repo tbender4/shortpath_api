@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Using Pundit gem to handle authorizations
+# All actions are allowed if you're a superuser. Otherwise no.
 class ApplicationPolicy
   attr_reader :user, :record
 

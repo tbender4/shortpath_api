@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  building: one
+  name: MyString
+  category: MyString
+  hide_barcode: false
+
+two:
+  building: two
+  name: MyString
+  category: MyString
+  hide_barcode: false

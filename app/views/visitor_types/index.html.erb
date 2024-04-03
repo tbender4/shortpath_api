@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Visitor types</h1>
+
+<div id="visitor_types">
+  <% @visitor_types.each do |visitor_type| %>
+    <%= render visitor_type %>
+    <p>
+      <%= link_to "Show this visitor type", visitor_type %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New visitor type", new_visitor_type_path %>

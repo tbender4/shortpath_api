@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @visitor_type %>
+
+<div>
+  <%= link_to "Edit this visitor type", edit_visitor_type_path(@visitor_type) %> |
+  <%= link_to "Back to visitor types", visitor_types_path %>
+
+  <%= button_to "Destroy this visitor type", @visitor_type, method: :delete %>
+</div>

@@ -6,6 +6,7 @@ class Building < Locationable
   has_one :address, as: :addressable, dependent: :destroy
   has_one :building_account, dependent: :destroy
   accepts_nested_attributes_for :address, :building_account
+  resourcify
 
   after_save :create_child_objects
   # TODO: More optimal SQL queries for traversing through locationable tree
