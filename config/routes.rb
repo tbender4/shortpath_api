@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :event_organizers
   resources :users
   resources :visitor_types
   devise_for :users

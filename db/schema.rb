@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_03_082645) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_04_012510) do
   create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "addressable_type", null: false
     t.bigint "addressable_id", null: false
@@ -59,6 +59,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_03_082645) do
     t.datetime "updated_at", null: false
     t.index ["contact_id"], name: "index_event_guests_on_contact_id"
     t.index ["event_id"], name: "index_event_guests_on_event_id"
+  end
+
+  create_table "event_organizers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_event_organizers_on_event_id"
+    t.index ["user_id"], name: "index_event_organizers_on_user_id"
   end
 
   create_table "events", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -163,6 +172,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_03_082645) do
   add_foreign_key "contacts", "visitor_types"
   add_foreign_key "event_guests", "contacts"
   add_foreign_key "event_guests", "events"
+  add_foreign_key "event_organizers", "events"
+  add_foreign_key "event_organizers", "users"
   add_foreign_key "events", "groups"
   add_foreign_key "events", "locationables"
   add_foreign_key "group_contacts", "contacts"
