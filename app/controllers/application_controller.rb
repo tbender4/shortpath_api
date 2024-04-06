@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Pundit handles JSON and HTML auth issue
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
@@ -5,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def user_not_authorized(exception)
+  def user_not_authorized
     # Check if the request expects a JSON response
     if request.format.json?
       render json: { error: 'You are not authorized to perform this action.' }, status: :forbidden
