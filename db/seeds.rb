@@ -11,7 +11,6 @@
 building = Building.create!({ name: 'Test Building' })
 building.floors << Floor.create!({ name: '1st floor', flevel: 1, building: })
 building.floors << Floor.create!({ name: '2nd floor', flevel: 2, building: })
-puts '--'
 building.floors.each.with_index(1) do |floor, index|
   floor.spaces << Space.create!({ name: "#{index}00", floor: })
 end
@@ -24,6 +23,9 @@ puts group.inspect
 building.spaces.each do |space|
   puts Lease.create(group:, space:).inspect
 end
+
+# VisitorType.create({ name: 'Visitor', building: })
+
 user = User.create(email: 'admin@sv3.com', password: SecureRandom.alphanumeric,
                    contact_attributes: { first_name: 'Admin', last_name: 'User' })
 puts user.inspect

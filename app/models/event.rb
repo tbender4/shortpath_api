@@ -11,7 +11,6 @@ class Event < ApplicationRecord
   has_many :event_guests, -> { includes(:contact) }
   has_many :guests, through: :event_guests, source: :contact
 
-  # accepts_nested_attributes_for :guests
   has_many :event_occurrences, dependent: :destroy_async
 
   before_create :generate_event_occurrences
@@ -21,6 +20,8 @@ class Event < ApplicationRecord
 
   # RRULE -> EventOccurrences
   def generate_event_occurrences(duration = 1.hour)
+    return if rrule_data.blank?
+
     dates = RRule.parse(rrule_data)
     self.event_occurrences = dates.map do |start_time|
       end_time = start_time + duration
@@ -47,7 +48,8 @@ class Event < ApplicationRecord
     end
   end
 
-  def self.create_test(test = nil)
+  # Quick tester
+  def self.create_test_event(test = nil)
     test ||= {
       subject: 'testing',
       description: 'this is a nested test',
