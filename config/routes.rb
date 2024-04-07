@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :visits
+  resources :event_occurrences
   resources :event_organizers
   resources :users
   resources :visitor_types

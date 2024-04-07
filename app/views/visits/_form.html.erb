@@ -1,0 +1,77 @@
+<%= form_with(model: visit) do |form| %>
+  <% if visit.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(visit.errors.count, "error") %> prohibited this visit from being saved:</h2>
+
+      <ul>
+        <% visit.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :event_occurrence_id, style: "display: block" %>
+    <%= form.text_field :event_occurrence_id %>
+  </div>
+
+  <div>
+    <%= form.label :contact_id, style: "display: block" %>
+    <%= form.text_field :contact_id %>
+  </div>
+
+  <div>
+    <%= form.label :checked_in_at, style: "display: block" %>
+    <%= form.datetime_field :checked_in_at %>
+  </div>
+
+  <div>
+    <%= form.label :checked_out_at, style: "display: block" %>
+    <%= form.datetime_field :checked_out_at %>
+  </div>
+
+  <div>
+    <%= form.label :checked_in_by_user, style: "display: block" %>
+    <%= form.datetime_field :checked_in_by_user %>
+  </div>
+
+  <div>
+    <%= form.label :checked_out_by_user, style: "display: block" %>
+    <%= form.datetime_field :checked_out_by_user %>
+  </div>
+
+  <div>
+    <%= form.label :state, style: "display: block" %>
+    <%= form.text_field :state %>
+  </div>
+
+  <div>
+    <%= form.label :barcode, style: "display: block" %>
+    <%= form.text_field :barcode %>
+  </div>
+
+  <div>
+    <%= form.label :notes, style: "display: block" %>
+    <%= form.text_area :notes %>
+  </div>
+
+  <div>
+    <%= form.label :barcode_disabled_by_user_id, style: "display: block" %>
+    <%= form.text_field :barcode_disabled_by_user_id %>
+  </div>
+
+  <div>
+    <%= form.label :barcode_disabled_at, style: "display: block" %>
+    <%= form.datetime_field :barcode_disabled_at %>
+  </div>
+
+  <div>
+    <%= form.label :barcode_disabled, style: "display: block" %>
+    <%= form.check_box :barcode_disabled %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

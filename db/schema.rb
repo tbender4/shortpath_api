@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_04_012510) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_06_204127) do
   create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "addressable_type", null: false
     t.bigint "addressable_id", null: false
@@ -59,6 +59,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_04_012510) do
     t.datetime "updated_at", null: false
     t.index ["contact_id"], name: "index_event_guests_on_contact_id"
     t.index ["event_id"], name: "index_event_guests_on_event_id"
+  end
+
+  create_table "event_occurrences", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_event_occurrences_on_event_id"
   end
 
   create_table "event_organizers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -166,12 +175,34 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_04_012510) do
     t.index ["building_id"], name: "index_visitor_types_on_building_id"
   end
 
+  create_table "visits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "event_occurrence_id", null: false
+    t.bigint "contact_id", null: false
+    t.datetime "checked_in_at"
+    t.datetime "checked_out_at"
+    t.bigint "checked_in_by_user_id"
+    t.bigint "checked_out_by_user_id"
+    t.string "state"
+    t.string "barcode"
+    t.text "notes"
+    t.bigint "barcode_disabled_by_user_id"
+    t.datetime "barcode_disabled_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["barcode_disabled_by_user_id"], name: "index_visits_on_barcode_disabled_by_user_id"
+    t.index ["checked_in_by_user_id"], name: "index_visits_on_checked_in_by_user_id"
+    t.index ["checked_out_by_user_id"], name: "index_visits_on_checked_out_by_user_id"
+    t.index ["contact_id"], name: "index_visits_on_contact_id"
+    t.index ["event_occurrence_id"], name: "index_visits_on_event_occurrence_id"
+  end
+
   add_foreign_key "building_accounts", "locationables", column: "building_id"
   add_foreign_key "contacts", "groups", column: "primary_group_id"
   add_foreign_key "contacts", "users"
   add_foreign_key "contacts", "visitor_types"
   add_foreign_key "event_guests", "contacts"
   add_foreign_key "event_guests", "events"
+  add_foreign_key "event_occurrences", "events"
   add_foreign_key "event_organizers", "events"
   add_foreign_key "event_organizers", "users"
   add_foreign_key "events", "groups"
@@ -181,4 +212,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_04_012510) do
   add_foreign_key "leases", "groups"
   add_foreign_key "leases", "locationables"
   add_foreign_key "visitor_types", "locationables", column: "building_id"
+  add_foreign_key "visits", "contacts"
+  add_foreign_key "visits", "event_occurrences"
+  add_foreign_key "visits", "users", column: "barcode_disabled_by_user_id"
+  add_foreign_key "visits", "users", column: "checked_in_by_user_id"
+  add_foreign_key "visits", "users", column: "checked_out_by_user_id"
 end

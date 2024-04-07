@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Event occurrences</h1>
+
+<div id="event_occurrences">
+  <% @event_occurrences.each do |event_occurrence| %>
+    <%= render event_occurrence %>
+    <p>
+      <%= link_to "Show this event occurrence", event_occurrence %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New event occurrence", new_event_occurrence_path %>

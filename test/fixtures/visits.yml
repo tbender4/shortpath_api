@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event_occurrence: one
+  contact: one
+  checked_in_at: 2024-04-06 16:41:27
+  checked_out_at: 2024-04-06 16:41:27
+  checked_in_by_user: 2024-04-06 16:41:27
+  checked_out_by_user: 2024-04-06 16:41:27
+  state: MyString
+  barcode: MyString
+  notes: MyText
+  barcode_disabled_by_user: one
+  barcode_disabled_at: 2024-04-06 16:41:27
+  barcode_disabled: false
+
+two:
+  event_occurrence: two
+  contact: two
+  checked_in_at: 2024-04-06 16:41:27
+  checked_out_at: 2024-04-06 16:41:27
+  checked_in_by_user: 2024-04-06 16:41:27
+  checked_out_by_user: 2024-04-06 16:41:27
+  state: MyString
+  barcode: MyString
+  notes: MyText
+  barcode_disabled_by_user: two
+  barcode_disabled_at: 2024-04-06 16:41:27
+  barcode_disabled: false

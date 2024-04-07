@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @event_occurrence %>
+
+<div>
+  <%= link_to "Edit this event occurrence", edit_event_occurrence_path(@event_occurrence) %> |
+  <%= link_to "Back to event occurrences", event_occurrences_path %>
+
+  <%= button_to "Destroy this event occurrence", @event_occurrence, method: :delete %>
+</div>

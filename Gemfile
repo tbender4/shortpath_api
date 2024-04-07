@@ -79,3 +79,5 @@ gem "devise", "~> 4.9"
 
 gem "rolify", "~> 6.0"
 gem "pundit", "~> 2.3"
+
+gem "rrule", "~> 0.6.0"
