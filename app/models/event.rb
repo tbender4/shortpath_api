@@ -28,7 +28,26 @@ class Event < ApplicationRecord
     end
   end
 
-  def self.test(test = nil)
+  def generate_guests!(guests_attributes)
+    self.guests = guests_attributes.map do |guest_attributes|
+      guest_id = guest_attributes.delete :id
+      guest = Contact.where(id: guest_id).first
+      guest ||= Contact.new
+      guest.assign_attributes(guest_attributes)
+      guest
+    end
+  end
+
+  # To be created after EventOccurrences and EventGuests have completed for an event
+  def generate_visits!
+    event_occurrences.flat_map do |event_occurrence|
+      guests.map do |guest|
+        Visit.create!(event_occurrence:, guest:)
+      end
+    end
+  end
+
+  def self.create_test(test = nil)
     test ||= {
       subject: 'testing',
       description: 'this is a nested test',
@@ -43,26 +62,9 @@ class Event < ApplicationRecord
         { id: 2 }
       ]
     }
-    guests = test.delete(guests)
+    guests = test.delete(:guests)
     event = Event.create test
-    event.generate_guests guests
-    # event.event_occurrences.map do |event_occurrence|
-    #   event.guests.map do |event_guest|
-    #     contact = event_guest.contact
-    #     Visit.create(event_occurrence:, contact:)
-    #   end
-    # end
-  end
-
-  private
-
-  # https://github.com/rails/rails/issues/7256#issuecomment-455041921
-  def generate_guests(guests_attributes)
-    self.guests = guests_attributes.map do |guest_attributes|
-      guest_id = guest_attributes.delete :id
-      guest = Contact.where(id: guest_id).first
-      guest ||= Contact.new
-      guest.update(guest_attributes)
-    end
+    event.generate_guests! guests
+    event.generate_visits!
   end
 end

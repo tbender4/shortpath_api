@@ -7,7 +7,7 @@ class EventGuest < ApplicationRecord
 
   accepts_nested_attributes_for :contact
 
-  alias_attribute :contact, :guest
+  alias guest contact
   # Create a barcode service thing going on here
   def assign_barcode
     self.barcode = SecureRandom.hex(8)

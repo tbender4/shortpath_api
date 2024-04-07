@@ -4,7 +4,7 @@
 class EventOccurrence < ApplicationRecord
   belongs_to :event
 
-  has_one :visit
+  has_many :visits
 
   validates :start_time, :end_time, presence: true
 end

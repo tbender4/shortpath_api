@@ -3,7 +3,7 @@
 # Guest or user's info
 class Contact < ApplicationRecord
   belongs_to :user, optional: true
-  validates_uniqueness_of :user, allow_nil: true
+  validates_uniqueness_of :user, allow_nil: true, unless: -> { user_id.nil? }
   has_one :visitor_type
 
   before_save :sync_user_email, if: -> { user && !@syncing_email && email_changed? && user.email != email }
