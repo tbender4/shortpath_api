@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_06_204127) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_08_030314) do
   create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "addressable_type", null: false
     t.bigint "addressable_id", null: false
@@ -199,7 +199,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_06_204127) do
   add_foreign_key "building_accounts", "locationables", column: "building_id"
   add_foreign_key "contacts", "groups", column: "primary_group_id"
   add_foreign_key "contacts", "users"
-  add_foreign_key "contacts", "visitor_types"
   add_foreign_key "event_guests", "contacts"
   add_foreign_key "event_guests", "events"
   add_foreign_key "event_occurrences", "events"

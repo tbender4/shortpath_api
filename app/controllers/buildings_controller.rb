@@ -1,9 +1,14 @@
+# frozen_string_literal: true
+
+# Manage building
 class BuildingsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_building, only: %i[show edit update destroy]
 
   # GET /buildings or /buildings.json
   def index
     # Scopes will be useful here
+    authorize Building
     @buildings = policy_scope(Building)
   end
 

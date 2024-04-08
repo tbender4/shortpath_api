@@ -25,6 +25,7 @@ class BuildingPolicy < ApplicationPolicy
   # Building admins can only see their buildings.
   class Scope < ApplicationPolicy::Scope
     def resolve
+      Rails.logger.debug "in scope: #{user.inspect}"
       return scope.all if user.has_role? :superuser
 
       user.is_building_admin_of_what

@@ -5,7 +5,7 @@ class Building < Locationable
   has_many :floors, foreign_key: :parent_id, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
   has_one :building_account, dependent: :destroy
-  has_many :visitor_types
+  has_many :visitor_types # intentionally not destroying so it won't break visitor query
   accepts_nested_attributes_for :address, :building_account
   resourcify
 
