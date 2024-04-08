@@ -3,7 +3,8 @@ class BuildingsController < ApplicationController
 
   # GET /buildings or /buildings.json
   def index
-    @buildings = Building.all
+    # Scopes will be useful here
+    @buildings = policy_scope(Building)
   end
 
   # GET /buildings/1 or /buildings/1.json
@@ -12,6 +13,7 @@ class BuildingsController < ApplicationController
 
   # GET /buildings/new
   def new
+    authorize Building
     @building = Building.new
   end
 
@@ -21,6 +23,7 @@ class BuildingsController < ApplicationController
 
   # POST /buildings or /buildings.json
   def create
+    authorize Building
     @building = Building.new(building_params)
 
     respond_to do |format|
@@ -62,10 +65,13 @@ class BuildingsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_building
     @building = Building.find(params[:id])
+    authorize @building
   end
 
   # Only allow a list of trusted parameters through.
   def building_params
-    params.require(:floor).permit(:name, :code)
+    params.require(:building).permit(:name, :code, address_attributes: %i[
+                                       street1 street2 city province zip time_zone
+                                     ])
   end
 end
