@@ -25,7 +25,7 @@ class Building < Locationable
 
   private
 
-  # Create fundamental child objects upon save.
+  # Create required child objects upon save.
   def create_child_objects
     self.address ||= Address.create(addressable: self)
     self.building_account ||= BuildingAccount.create(building: self)

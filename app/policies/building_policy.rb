@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Building Admin can go through the page
+# Building Admin scoped down to where they're group admins of otherwise it will not work.
 class BuildingPolicy < ApplicationPolicy
   def index?
     return true if @user.has_role? :building_admin, :any
@@ -9,7 +9,7 @@ class BuildingPolicy < ApplicationPolicy
   end
 
   def show?
-    return true if @user.has_role?(:building_admin, @building)
+    return true if @user.has_role?(:building_admin, @record)
 
     super
   end
@@ -18,14 +18,9 @@ class BuildingPolicy < ApplicationPolicy
     show?
   end
 
-  def destroy?
-    show?
-  end
-
   # Building admins can only see their buildings.
   class Scope < ApplicationPolicy::Scope
     def resolve
-      Rails.logger.debug "in scope: #{user.inspect}"
       return scope.all if user.has_role? :superuser
 
       user.is_building_admin_of_what

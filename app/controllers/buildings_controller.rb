@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# Manage building
+# Manage building if you have building_admin permission. building_guard permission will be handled in another route.
 class BuildingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_building, only: %i[show edit update destroy]
+  before_action :set_building, only: %i[show update destroy]
 
   # GET /buildings or /buildings.json
   def index
@@ -14,6 +14,7 @@ class BuildingsController < ApplicationController
 
   # GET /buildings/1 or /buildings/1.json
   def show
+    authorize @building
   end
 
   # GET /buildings/new
@@ -22,47 +23,55 @@ class BuildingsController < ApplicationController
     @building = Building.new
   end
 
-  # GET /buildings/1/edit
-  def edit
-  end
+  # # GET /buildings/1/edit
+  # def edit
+  # end
 
   # POST /buildings or /buildings.json
   def create
     authorize Building
     @building = Building.new(building_params)
+    render :show, status: :created, location: @building
 
-    respond_to do |format|
-      if @building.save
-        format.html { redirect_to building_url(@building), notice: 'Building was successfully created.' }
-        format.json { render :show, status: :created, location: @building }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @building.errors, status: :unprocessable_entity }
-      end
-    end
+    # respond_to do |format|
+    #   if @building.save
+    #     format.html { redirect_to building_url(@building), notice: 'Building was successfully created.' }
+    #     format.json { render :show, status: :created, location: @building }
+    #   else
+    #     format. html { render :new, status: :unprocessable_entity }
+    #     format.json { render json: @building.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /buildings/1 or /buildings/1.json
   def update
-    respond_to do |format|
-      if @building.update(building_params)
-        format.html { redirect_to building_url(@building), notice: 'Building was successfully updated.' }
-        format.json { render :show, status: :ok, location: @building }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @building.errors, status: :unprocessable_entity }
-      end
+    if @building.update(building_params)
+      render :show, status: :ok, location: @building
+    else
+      render json: @building.errors, status: :unprocessable_entity
     end
+
+    # respond_to do |format|
+    #   if @building.update(building_params)
+    #     # format.html { redirect_to building_url(@building), notice: 'Building was successfully updated.' }
+    #     format.json { render :show, status: :ok, location: @building }
+    #   else
+    #     # format.html { render :edit, status: :unprocessable_entity }
+    #     format.json { render json: @building.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # DELETE /buildings/1 or /buildings/1.json
   def destroy
     @building.destroy!
+    head :no_content
 
-    respond_to do |format|
-      format.html { redirect_to buildings_url, notice: 'Building was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    # respond_to do |format|
+    #   format.html { redirect_to buildings_url, notice: 'Building was successfully destroyed.' }
+    #   format.json { head :no_content }
+    # end
   end
 
   private
@@ -70,7 +79,6 @@ class BuildingsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_building
     @building = Building.find(params[:id])
-    authorize @building
   end
 
   # Only allow a list of trusted parameters through.
