@@ -15,11 +15,11 @@ Rails.application.routes.draw do
   resources :contacts
   resources :buildings, shallow: true do
     resources :floors, shallow: true do
-      resources :spaces
+      resources :spaces, shallow: true do
+        resources :leases
+      end
     end
   end
-  resources :leases
-  resources :locationables
   resources :groups
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

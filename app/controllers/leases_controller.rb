@@ -1,70 +1,70 @@
 class LeasesController < ApplicationController
-  before_action :set_lease, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :set_space, only: %i[index create]
+  before_action :set_lease, only: %i[show update destroy]
 
   # GET /leases or /leases.json
   def index
-    @leases = Lease.all
+    authorize @space.building, :show?
+    @leases = @space.leases
   end
 
   # GET /leases/1 or /leases/1.json
   def show
-  end
-
-  # GET /leases/new
-  def new
-    @lease = Lease.new
-  end
-
-  # GET /leases/1/edit
-  def edit
+    authorize @lease.building
   end
 
   # POST /leases or /leases.json
   def create
-    @lease = Lease.new(lease_params)
+    authorize @space.building, :show?
+    @lease = Lease.new(lease_create_params)
+    @lease.space = @space
 
-    respond_to do |format|
-      if @lease.save
-        format.html { redirect_to lease_url(@lease), notice: "Lease was successfully created." }
-        format.json { render :show, status: :created, location: @lease }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @lease.errors, status: :unprocessable_entity }
-      end
+    if @lease.save
+      render :show, status: :created, location: @lease
+    else
+      render json: @lease.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /leases/1 or /leases/1.json
   def update
-    respond_to do |format|
-      if @lease.update(lease_params)
-        format.html { redirect_to lease_url(@lease), notice: "Lease was successfully updated." }
-        format.json { render :show, status: :ok, location: @lease }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @lease.errors, status: :unprocessable_entity }
-      end
+    authorize @lease.building, :show?
+    if @lease.update(lease_update_params)
+      render :show, status: :ok, location: @lease
+    else
+      render json: @lease.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /leases/1 or /leases/1.json
+  # Leases cannot be destroyed. Only retired.
   def destroy
-    @lease.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to leases_url, notice: "Lease was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    authorize @lease.building, :show?
+    @lease.retire!
+    render :show, status: :ok, location: @lease
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_lease
-      @lease = Lease.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def lease_params
-      params.fetch(:lease, {})
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_lease
+    @lease = Lease.find(params[:id])
+  end
+
+  def set_space
+    @lease = Space.find(params[:space_id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def lease_create_params
+    # Associate an existing group_id, or supply attributes for a NEW group.
+    params.require(:lease).permit(
+      :start_date, :end_date, :group_id, group_attributes: %i[name description]
+    )
+  end
+
+  def lease_update_params
+    params.require(:lease).permit(:end_date, :state_event)
+  end
 end

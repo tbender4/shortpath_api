@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# yeah
+# Building -> Floors -> Spaces. Space + Group = Lease
 class Building < Locationable
   has_many :floors, foreign_key: :parent_id, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
@@ -11,16 +11,8 @@ class Building < Locationable
 
   after_save :create_child_objects
   has_many :spaces, through: :floors
-
-  def leases
-    Lease.joins('INNER JOIN locationables AS spaces ON spaces.id = leases.locationable_id')
-         .joins('INNER JOIN locationables AS floors ON floors.id = spaces.parent_id')
-         .where("spaces.type = 'Space' AND floors.parent_id = ?", id)
-  end
-
-  def active_leases
-    leases.where(state: 'active')
-  end
+  has_many :leases, through: :spaces
+  has_many :active_leases, through: :spaces
 
   private
 
