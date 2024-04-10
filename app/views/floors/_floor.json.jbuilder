@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.extract! floor, :id, :name, :flevel
 if params[:stacking_plan]
   json.spaces do

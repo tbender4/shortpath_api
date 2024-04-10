@@ -12,8 +12,10 @@ Rails.application.routes.draw do
   resources :events
   resources :contacts
   resources :spaces
-  resources :floors
-  resources :buildings
+  # resources :floors
+  resources :buildings, shallow: true do
+    resources :floors
+  end
   resources :leases
   resources :locationables
   resources :groups

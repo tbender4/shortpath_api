@@ -1,60 +1,48 @@
+# frozen_string_literal: true
+
+# Building drives the authorization of managing floors
 class FloorsController < ApplicationController
-  before_action :set_floor, only: %i[show edit update destroy]
+  before_action :authenticate_user!
+  before_action :set_building, only: %i[index create]
+  before_action :set_floor, only: %i[show update destroy]
 
   # GET /floors or /floors.json
   def index
-    @floors = Floor.all
+    authorize @building, :update?, policy_class: BuildingPolicy
+    @floors = @building.floors
   end
 
   # GET /floors/1 or /floors/1.json
   def show
-  end
-
-  # GET /floors/new
-  def new
-    @floor = Floor.new
-  end
-
-  # GET /floors/1/edit
-  def edit
+    authorize @floor.building, policy_class: BuildingPolicy
   end
 
   # POST /floors or /floors.json
   def create
+    authorize @building, :update?, policy_class: BuildingPolicy
     @floor = Floor.new(floor_params)
-
-    respond_to do |format|
-      if @floor.save
-        format.html { redirect_to floor_url(@floor), notice: 'Floor was successfully created.' }
-        format.json { render :show, status: :created, location: @floor }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @floor.errors, status: :unprocessable_entity }
-      end
+    if @floor.save
+      render :show, status: :created, location: @floor
+    else
+      render json: @floor.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /floors/1 or /floors/1.json
   def update
-    respond_to do |format|
-      if @floor.update(floor_params)
-        format.html { redirect_to floor_url(@floor), notice: 'Floor was successfully updated.' }
-        format.json { render :show, status: :ok, location: @floor }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @floor.errors, status: :unprocessable_entity }
-      end
+    authorize @floor.building, :update?, policy_class: BuildingPolicy
+    if @floor.update(floor_params)
+      render :show, status: :ok, location: @floor
+    else
+      render json: @floor.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /floors/1 or /floors/1.json
   def destroy
+    authorize @floor.building, :update?, policy_class: BuildingPolicy
     @floor.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to floors_url, notice: 'Floor was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    render notice: 'Floor was successfully destroyed.'
   end
 
   private
@@ -64,8 +52,13 @@ class FloorsController < ApplicationController
     @floor = Floor.find(params[:id])
   end
 
+  def set_building
+    @building = Building.find(params[:building_id])
+    # TODO: Break if floor not part of building
+  end
+
   # Only allow a list of trusted parameters through.
   def floor_params
-    params.require(:space).permit(:name)
+    params.require(:space).permit(:name, :flevel)
   end
 end

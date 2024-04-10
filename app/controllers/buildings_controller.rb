@@ -17,31 +17,15 @@ class BuildingsController < ApplicationController
     authorize @building
   end
 
-  # GET /buildings/new
-  def new
-    authorize Building
-    @building = Building.new
-  end
-
-  # # GET /buildings/1/edit
-  # def edit
-  # end
-
   # POST /buildings or /buildings.json
   def create
     authorize Building
     @building = Building.new(building_params)
-    render :show, status: :created, location: @building
-
-    # respond_to do |format|
-    #   if @building.save
-    #     format.html { redirect_to building_url(@building), notice: 'Building was successfully created.' }
-    #     format.json { render :show, status: :created, location: @building }
-    #   else
-    #     format. html { render :new, status: :unprocessable_entity }
-    #     format.json { render json: @building.errors, status: :unprocessable_entity }
-    #   end
-    # end
+    if @building.save
+      render :show, status: :created, location: @building
+    else
+      render json: @building.errors, status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /buildings/1 or /buildings/1.json
@@ -51,27 +35,12 @@ class BuildingsController < ApplicationController
     else
       render json: @building.errors, status: :unprocessable_entity
     end
-
-    # respond_to do |format|
-    #   if @building.update(building_params)
-    #     # format.html { redirect_to building_url(@building), notice: 'Building was successfully updated.' }
-    #     format.json { render :show, status: :ok, location: @building }
-    #   else
-    #     # format.html { render :edit, status: :unprocessable_entity }
-    #     format.json { render json: @building.errors, status: :unprocessable_entity }
-    #   end
-    # end
   end
 
   # DELETE /buildings/1 or /buildings/1.json
   def destroy
     @building.destroy!
-    head :no_content
-
-    # respond_to do |format|
-    #   format.html { redirect_to buildings_url, notice: 'Building was successfully destroyed.' }
-    #   format.json { head :no_content }
-    # end
+    render(json: { notice: 'Building was successfully destroyed.' })
   end
 
   private
