@@ -5,22 +5,21 @@ class Building < Locationable
   has_many :floors, foreign_key: :parent_id, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
   has_one :building_account, dependent: :destroy
-  has_many :visitor_types # intentionally not destroying so it won't break visitor query
+  has_many :visitor_types, dependent: :destroy_async
   accepts_nested_attributes_for :address, :building_account, :floors
   resourcify
 
   after_save :create_child_objects
-  # TODO: More optimal SQL queries for traversing through locationable tree
-  def spaces
-    floors.flat_map(&:spaces)
-  end
+  has_many :spaces, through: :floors
 
   def leases
-    spaces.flat_map(&:leases)
+    Lease.joins('INNER JOIN locationables AS spaces ON spaces.id = leases.locationable_id')
+         .joins('INNER JOIN locationables AS floors ON floors.id = spaces.parent_id')
+         .where("spaces.type = 'Space' AND floors.parent_id = ?", id)
   end
 
   def active_leases
-    spaces.flat_map(&:active_leases)
+    leases.where(state: 'active')
   end
 
   private
