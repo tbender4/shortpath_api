@@ -1,10 +1,12 @@
+# Final place where you can have leases.
 class SpacesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_floor, only: %i[index create]
   before_action :set_space, only: %i[show update destroy]
 
   # GET /spaces or /spaces.json
   def index
-    authorize @space.building, :show?
+    authorize @floor.building, :show?
 
     @spaces = @floor.spaces
   end

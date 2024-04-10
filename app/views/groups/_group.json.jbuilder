@@ -1,2 +1,4 @@
-json.extract! group, :id, :created_at, :updated_at, :description, :uuid
+# frozen_string_literal: true
+
+json.extract! group, :id, :name, :description
 json.url group_url(group, format: :json)
