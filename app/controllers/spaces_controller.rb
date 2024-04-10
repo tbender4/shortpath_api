@@ -1,60 +1,46 @@
 class SpacesController < ApplicationController
-  before_action :set_space, only: %i[show edit update destroy]
+  before_action :set_floor, only: %i[index create]
+  before_action :set_space, only: %i[show update destroy]
 
   # GET /spaces or /spaces.json
   def index
-    @spaces = Space.all
+    authorize @space.building, :show?
+
+    @spaces = @floor.spaces
   end
 
   # GET /spaces/1 or /spaces/1.json
   def show
-  end
-
-  # GET /spaces/new
-  def new
-    @space = Space.new
-  end
-
-  # GET /spaces/1/edit
-  def edit
+    authorize @space.building
   end
 
   # POST /spaces or /spaces.json
   def create
+    authorize @floor.building, :show?
     @space = Space.new(space_params)
-
-    respond_to do |format|
-      if @space.save
-        format.html { redirect_to space_url(@space), notice: 'Space was successfully created.' }
-        format.json { render :show, status: :created, location: @space }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @space.errors, status: :unprocessable_entity }
-      end
+    @space.floor = @floor
+    if @space.save
+      render :show, status: :created, location: @space
+    else
+      render json: @space.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /spaces/1 or /spaces/1.json
   def update
-    respond_to do |format|
-      if @space.update(space_params)
-        format.html { redirect_to space_url(@space), notice: 'Space was successfully updated.' }
-        format.json { render :show, status: :ok, location: @space }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @space.errors, status: :unprocessable_entity }
-      end
+    authorize @space.building
+    if @space.update(space_params)
+      render :show, status: :ok, location: @space
+    else
+      render json: @space.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /spaces/1 or /spaces/1.json
   def destroy
+    authorize @space.building, :show?
     @space.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to spaces_url, notice: 'Space was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    render(json: { notice: 'Space was successfully destroyed.' })
   end
 
   private
@@ -64,8 +50,12 @@ class SpacesController < ApplicationController
     @space = Space.find(params[:id])
   end
 
+  def set_floor
+    @floor = Floor.find(params[:floor_id])
+  end
+
   # Only allow a list of trusted parameters through.
   def space_params
-    params.require(:space).permit(:name)
+    params.require(:space).permit(:name, :description)
   end
 end

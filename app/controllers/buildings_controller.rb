@@ -52,8 +52,9 @@ class BuildingsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def building_params
-    params.require(:building).permit(:name, :code, address_attributes: %i[
+    params.require(:building).permit(:name, :code, :description, address_attributes: %i[
                                        street1 street2 city province zip time_zone
-                                     ])
+                                     ], floors_attributes: [:id, :name, :description, :flevel,
+                                                            { spaces_attributes: %i[id name description] }])
   end
 end

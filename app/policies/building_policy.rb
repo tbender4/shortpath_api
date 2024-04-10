@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Building Admin scoped down to where they're group admins of otherwise it will not work.
+# Building Admin permission OR superuser
 class BuildingPolicy < ApplicationPolicy
   def index?
     return true if @user.has_role? :building_admin, :any

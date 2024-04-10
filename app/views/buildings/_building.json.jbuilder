@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-json.extract! building, :id, :name, :code
+json.extract! building, :id, :name, :code, :description
 json.address do
   json.extract! building.address, :street1, :string2, :city, :province, :zip, :time_zone
 end

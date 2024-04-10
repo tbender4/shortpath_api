@@ -8,19 +8,20 @@ class FloorsController < ApplicationController
 
   # GET /floors or /floors.json
   def index
-    authorize @building, :update?, policy_class: BuildingPolicy
+    authorize @building, :show?
     @floors = @building.floors
   end
 
   # GET /floors/1 or /floors/1.json
   def show
-    authorize @floor.building, policy_class: BuildingPolicy
+    authorize @floor.building
   end
 
   # POST /floors or /floors.json
   def create
-    authorize @building, :update?, policy_class: BuildingPolicy
+    authorize @building, :show?
     @floor = Floor.new(floor_params)
+    @floor.building = @building
     if @floor.save
       render :show, status: :created, location: @floor
     else
@@ -30,7 +31,7 @@ class FloorsController < ApplicationController
 
   # PATCH/PUT /floors/1 or /floors/1.json
   def update
-    authorize @floor.building, :update?, policy_class: BuildingPolicy
+    authorize @floor.building
     if @floor.update(floor_params)
       render :show, status: :ok, location: @floor
     else
@@ -40,9 +41,9 @@ class FloorsController < ApplicationController
 
   # DELETE /floors/1 or /floors/1.json
   def destroy
-    authorize @floor.building, :update?, policy_class: BuildingPolicy
+    authorize @floor.building, :show?
     @floor.destroy!
-    render notice: 'Floor was successfully destroyed.'
+    render(json: { notice: 'Floor was successfully destroyed.' })
   end
 
   private
@@ -59,6 +60,6 @@ class FloorsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def floor_params
-    params.require(:space).permit(:name, :flevel)
+    params.require(:floor).permit(:name, :description, :flevel)
   end
 end
