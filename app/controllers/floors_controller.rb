@@ -55,7 +55,6 @@ class FloorsController < ApplicationController
 
   def set_building
     @building = Building.find(params[:building_id])
-    # TODO: Break if floor not part of building
   end
 
   # Only allow a list of trusted parameters through.

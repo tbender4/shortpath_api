@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :event_occurrences
   resources :event_organizers
   resources :users
-  resources :visitor_types
+
   devise_for :users
   # resources :building_accounts
   resources :addresses
@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :events
   resources :contacts
   resources :buildings, shallow: true do
+    resources :visitor_types
     resources :floors, shallow: true do
       resources :spaces, shallow: true do
         resources :leases
