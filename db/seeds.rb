@@ -27,7 +27,8 @@ building = create_building('Test Building')
 group = Group.create({ name: 'Test Group' })
 puts group.inspect
 building.spaces.each do |space|
-  puts Lease.create(group:, space:).inspect
+  lease = Lease.create!(group:, space:)
+  puts lease.inspect
 end
 
 # VisitorType.create({ name: 'Visitor', building: })
