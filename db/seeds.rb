@@ -20,6 +20,7 @@ def create_building(name)
   puts building.inspect
   puts building.floors.inspect
   building.floors.each { |f| f.spaces.each { |s| puts s.inspect } }
+  building
 end
 
 building = create_building('Test Building')

@@ -6,5 +6,4 @@ class Space < Locationable
   has_many :leases, foreign_key: :locationable_id
   has_many :active_leases, -> { where state: 'active' }, class_name: 'Lease', foreign_key: :locationable_id
   has_one :building, through: :floor
-  accepts_nested_attributes_for :group
 end

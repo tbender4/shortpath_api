@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Leases have an opportunity to create the group on the fly. Only other action is to retire the lease.
 class LeasesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_space, only: %i[index create]
@@ -65,6 +68,7 @@ class LeasesController < ApplicationController
   end
 
   def lease_update_params
+    # Make state_event = 'retire' an alternate method of retirement
     params.require(:lease).permit(:end_date, :state_event)
   end
 end

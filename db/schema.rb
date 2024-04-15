@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_08_030314) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_15_035932) do
   create_table "addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "addressable_type", null: false
     t.bigint "addressable_id", null: false
@@ -89,8 +89,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_08_030314) do
     t.string "string"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "created_by_user_id"
+    t.bigint "updated_by_user_id"
+    t.index ["created_by_user_id"], name: "index_events_on_created_by_user_id"
     t.index ["group_id"], name: "index_events_on_group_id"
     t.index ["locationable_id"], name: "index_events_on_locationable_id"
+    t.index ["updated_by_user_id"], name: "index_events_on_updated_by_user_id"
   end
 
   create_table "group_contacts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -206,6 +210,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_08_030314) do
   add_foreign_key "event_organizers", "users"
   add_foreign_key "events", "groups"
   add_foreign_key "events", "locationables"
+  add_foreign_key "events", "users", column: "created_by_user_id"
+  add_foreign_key "events", "users", column: "updated_by_user_id"
   add_foreign_key "group_contacts", "contacts"
   add_foreign_key "group_contacts", "groups"
   add_foreign_key "leases", "groups"

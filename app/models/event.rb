@@ -6,12 +6,17 @@ class Event < ApplicationRecord
   belongs_to :location, class_name: 'Space', foreign_key: 'locationable_id'
   belongs_to :space, foreign_key: 'locationable_id' # Same as above
 
+  belongs_to :created_by_user, class_name: 'User'
+  belongs_to :updated_by_user, class_name: 'User'
+
   validates :group, :space, :rrule_data, presence: true
 
   has_many :event_guests, -> { includes(:contact) }
   has_many :guests, through: :event_guests, source: :contact
+  accepts_nested_attributes_for :guests
 
   has_many :event_occurrences, dependent: :destroy_async
+  has_many :visits, through: :event_occurrences
 
   before_create :generate_event_occurrences
 
@@ -29,16 +34,6 @@ class Event < ApplicationRecord
     end
   end
 
-  def generate_guests!(guests_attributes)
-    self.guests = guests_attributes.map do |guest_attributes|
-      guest_id = guest_attributes.delete :id
-      guest = Contact.where(id: guest_id).first
-      guest ||= Contact.new
-      guest.assign_attributes(guest_attributes)
-      guest
-    end
-  end
-
   # To be created after EventOccurrences and EventGuests have completed for an event
   def generate_visits!
     event_occurrences.flat_map do |event_occurrence|
@@ -49,24 +44,34 @@ class Event < ApplicationRecord
   end
 
   # Quick tester
-  def self.create_test_event(test = nil)
+  def self.generate_with_guests(test = nil)
     test ||= {
       subject: 'testing',
       description: 'this is a nested test',
       group: Group.first,
       space: Space.first,
       rrule_data: 'FREQ=DAILY;COUNT=3',
-      guests: [
+      guest_ids: [3], # put existing IDs here. Be careful, omitting IDs on a PUT will strip them.
+      guests_attributes: [
         {
           first_name: 'Billy',
           last_name: 'Bob'
-        },
-        { id: 2 }
+        }
       ]
     }
-    guests = test.delete(:guests)
+
     event = Event.create test
-    event.generate_guests! guests
+    # event.generate_guests! guests
     event.generate_visits!
+    event
+  end
+
+  def self.update_existing_test(test = nil)
+    test ||= {
+      guest_ids: [3]
+    }
+    e = Event.last
+    e.update! test
+    e
   end
 end
