@@ -2,14 +2,11 @@
 
 # It's info is stored in contact table.
 class User < ApplicationRecord
-  rolify # before_add: :remove_orphaned_group_member
+  rolify before_remove: :remove_orphaned_group_member, before_add: :add_orphaned_group_member
   include Role::QueryHelper
 
   # rolify :before_add => :before_add_method
 
-  def before_add_method(role)
-    # do something before it gets added
-  end
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -28,6 +25,18 @@ class User < ApplicationRecord
   end
 
   private
+
+  def remove_orphaned_group_member(role)
+    return unless role.name == Role::GROUP_MEMBER
+
+    remove_role Role::GROUP_ADMIN, role.resource
+  end
+
+  def add_orphaned_group_admin(role)
+    return unless role.name == Role::GROUP_ADMIN
+
+    add_role Role::GROUP_MEMBER, role.resource
+  end
 
   # Ensure contact record existence is not orphaned.
   def contact_must_exist
