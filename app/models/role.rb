@@ -31,26 +31,20 @@ class Role < ApplicationRecord
     extend ActiveSupport::Concern
 
     included do
-      # Roles helpers
-      has_many :is_building_admin_of_what, lambda {
-        where(roles: { name: :building_admin })
-      }, through: :roles, source: :resource, source_type: :Building
+      def self.generate_is_x_of_what(role_name, source_type)
+        has_many "is_#{role_name}_of_what".to_sym, lambda {
+          where(roles: { name: role_name })
+        }, through: :roles, source: :resource, source_type:
+      end
 
-      has_many :is_building_guard_of_what, lambda {
-                                             where(roles: { name: :building_guard })
-                                           }, through: :roles, source: :resource, source_type: :Building
+      # Building role associations
+      generate_is_x_of_what(:building_admin, 'Building')
+      generate_is_x_of_what(:building_guard, 'Building')
 
-      has_many :is_member_of_what, lambda {
-                                     where(roles: { name: :member })
-                                   }, through: :roles, source: :resource, source_type: :Group
-
-      has_many :is_admin_of_what, lambda {
-                                    where(roles: { name: :admin })
-                                  }, through: :roles, source: :resource, source_type: :Group
-
-      has_many :can_schedule_visitors_for_what, lambda {
-        where(roles: { name: :schedule_visitors })
-      }, through: :roles, source: :resource, source_type: :Group
+      # Group role associations
+      generate_is_x_of_what(:member, 'Group')
+      generate_is_x_of_what(:admin, 'Group')
+      generate_is_x_of_what(:schedule_visitors, 'Group')
     end
   end
   scopify

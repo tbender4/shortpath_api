@@ -30,6 +30,7 @@ class BuildingsController < ApplicationController
 
   # PATCH/PUT /buildings/1 or /buildings/1.json
   def update
+    authorize @building
     if @building.update(building_params)
       render :show, status: :ok, location: @building
     else
@@ -39,6 +40,7 @@ class BuildingsController < ApplicationController
 
   # DELETE /buildings/1 or /buildings/1.json
   def destroy
+    authorize @building
     @building.destroy!
     render(json: { notice: 'Building was successfully destroyed.' })
   end
