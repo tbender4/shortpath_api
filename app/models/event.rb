@@ -6,72 +6,78 @@ class Event < ApplicationRecord
   belongs_to :location, class_name: 'Space', foreign_key: 'locationable_id'
   belongs_to :space, foreign_key: 'locationable_id' # Same as above
 
-  belongs_to :created_by_user, class_name: 'User'
-  belongs_to :updated_by_user, class_name: 'User'
-
-  validates :group, :space, :rrule_data, presence: true
+  belongs_to :created_by_user, class_name: 'User', optional: true
+  belongs_to :updated_by_user, class_name: 'User', optional: true
 
   has_many :event_guests, -> { includes(:contact) }
   has_many :guests, through: :event_guests, source: :contact
   accepts_nested_attributes_for :guests
 
   has_many :event_occurrences, dependent: :destroy_async
-  has_many :visits, through: :event_occurrences
+  has_many :visits, through: :event_occurrences # TODO: Destroy_async?
+
+  has_many :event_organizers, dependent: :destroy_async
+  has_many :organizers, through: :event_organizers, source: :user
+
+  attr_accessor :duration
+
+  validates :group, :space, :rrule_data, :location, presence: true
 
   before_create :generate_event_occurrences
+  after_save :generate_visits!
 
-  # handle organizers when I get there
-  # Event Occurrence processor? Maybe. IDK
+  before_update :update_event_occurrences, if: :rrule_data_changed?
+  # TODO: around-save visits records
+  # TODO: Update PUT-friendly generate_event_occurrences
 
   # RRULE -> EventOccurrences
-  def generate_event_occurrences(duration = 1.hour)
+  def generate_event_occurrences
     return if rrule_data.blank?
 
-    dates = RRule.parse(rrule_data)
-    self.event_occurrences = dates.map do |start_time|
+    duration ||= 1.hour
+    tzid = space&.building&.address&.time_zone
+    dates = RRule.parse(rrule_data, tzid:)
+    self.event_occurrences = dates.map do |date|
+      start_time = date.change(sec: 0, usec: 0)
       end_time = start_time + duration
       EventOccurrence.new({ event: self, start_time:, end_time: })
     end
   end
 
+  # event_occurrences PUT-friendly
+  # def update_event_occurrences
+  #   return if rrule_data.blank?
+
+  #   tzid = space&.building&.address&.time_zone
+  #   new_dates = RRule.parse(rrule_data, tzid:)
+  #   new_dates_set = new_dates.to_set
+    
+  #   updates_event_occurrrences = []
+  #   # dates = RRule.parse(rrule_data)
+  #   now = DateTime.now
+  #   event_occurrences.each do |event_occ|
+  #     # Event Occurrences in the past are not to be deleted
+  #     if occurrence.start_time.beginning_of_day < DateTime.now.beginning_of_day
+  #       updates_event_occurrrences << event_occ
+  #       next
+  #     end
+  #     updates_event_occurrrences
+  #     return event_occ if event_occ.start_time <= now
+
+
+  #   end
+
+  # end
+
   # To be created after EventOccurrences and EventGuests have completed for an event
-  def generate_visits!
+  # It should be PUT-ready
+  def generate_visits!(first_time: false)
     event_occurrences.flat_map do |event_occurrence|
       guests.map do |guest|
-        Visit.create!(event_occurrence:, guest:)
+        visit = Visit.where(event_occurrence:, guest:).first unless first_time
+        visit ||= Visit.create!(event_occurrence:, guest:)
+        visit
       end
     end
-  end
-
-  # Quick tester
-  def self.generate_with_guests(test = nil)
-    test ||= {
-      subject: 'testing',
-      description: 'this is a nested test',
-      group: Group.first,
-      space: Space.first,
-      rrule_data: 'FREQ=DAILY;COUNT=3',
-      guest_ids: [3], # put existing IDs here. Be careful, omitting IDs on a PUT will strip them.
-      guests_attributes: [
-        {
-          first_name: 'Billy',
-          last_name: 'Bob'
-        }
-      ]
-    }
-
-    event = Event.create test
-    # event.generate_guests! guests
-    event.generate_visits!
-    event
-  end
-
-  def self.update_existing_test(test = nil)
-    test ||= {
-      guest_ids: [3]
-    }
-    e = Event.last
-    e.update! test
-    e
   end
 end
